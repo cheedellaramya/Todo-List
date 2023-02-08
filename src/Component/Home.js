@@ -2,18 +2,14 @@ import React,{useState} from 'react'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-
-
-
 const Home = ({children}) => {
 const [activity,setActivity]=useState('');
 const [listData,setListData]=useState([]);
 const [status,setStatus] = useState('Incomplete');
 const [selectedId, setSelectedId] = useState(0);
-// const [updatedStatus,setUpdatedStatus]=useState('');
 const [data,setData]=useState([]);
 
-const addActivty=()=>{
+const addActivity=()=>{
   console.log(activity,status);
   if(activity.length === 0){
     toast.error('Please enter title !');
@@ -33,6 +29,9 @@ const deleteItem=(e)=>{
   setListData(filterData)
   setData(filterData)
 }
+
+
+
 const editItem=(e)=>{
  const item =  data.filter((d)=>d.id === Number(e.target.id))
   setActivity(item[0].activity);
@@ -65,7 +64,7 @@ const updateActivity = (id) =>{
   toast('Toast Updated successfully!')
   setSelectedId(0);
   
-  //Reset existing state variables
+ 
   setActivity('');
   setStatus('Incomplete')
 }
@@ -92,7 +91,7 @@ const updateActivity = (id) =>{
               <li className='List' key={item.id}>
                   
                 <div>
-                    <input className='check' type="checkbox" checked={item.status === 'Complete'? true : false}/>
+                    <input className='check' type="checkbox"  maxLength='15' checked={item.status === 'Complete'? true : false}/>
                     {item.status==='Incomplete' && item.activity}
                     {item.status === 'Complete' && <s>{item.activity}</s>}
                   </div>
@@ -111,7 +110,7 @@ const updateActivity = (id) =>{
               
           </ul>
       </div>
-      <ToastContainer position='bottom-right' />
+      <ToastContainer position='top-center' />
      
 
 
@@ -120,12 +119,12 @@ const updateActivity = (id) =>{
         <div className="modal-dialog" role="document">
           <div className="modal-content">
             <div className="modal-header">
-             {selectedId !== 0 && <h5 className="modal-title">update TODO</h5>} 
+             {selectedId !== 0 && <h5 className="modal-title">Update TODO</h5>} 
              {selectedId === 0 &&  <h5 className="modal-title">ADD TODO</h5> }
             </div>
             <div className="modal-body">
               <p>Title</p>
-              <input type='text' style={{'paddingRight':'10rem'}} value={activity} 
+              <input type='text' maxLength="15" style={{'paddingRight':'10rem'}} value={activity} 
                 onChange={(e)=>setActivity(e.target.value)}>
               </input>
               <p style={{'marginTop':'7px'}}>Status</p>
@@ -136,7 +135,7 @@ const updateActivity = (id) =>{
             </div>
             <div className="modal-footer">
               <button type="submit" className="btn btn-primary" data-dismiss={activity.length > 0 ? 'modal' : ''}  
-                 onClick={ selectedId  === 0 ? () => addActivty()  : () => updateActivity(selectedId)}> { selectedId  === 0 ? 'Add' : 'Updae' } Task</button>
+                 onClick={ selectedId  === 0 ? () => addActivity()  : () => updateActivity(selectedId)}> { selectedId  === 0 ? 'Add' : 'Update' } Task</button>
               <button type="submit" className="btn btn-secondary" data-dismiss="modal">Cancel</button>
             </div>
           </div>
