@@ -1,6 +1,8 @@
-import React,{useState} from 'react'
+import React,{useState,useEffect} from 'react'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+
+
 
 const Home = ({children}) => {
 const [activity,setActivity]=useState('');
@@ -8,6 +10,7 @@ const [listData,setListData]=useState([]);
 const [status,setStatus] = useState('Incomplete');
 const [selectedId, setSelectedId] = useState(0);
 const [data,setData]=useState([]);
+
 
 const addActivity=()=>{
   console.log(activity,status);
@@ -17,20 +20,18 @@ const addActivity=()=>{
   }
   setData([...data,{activity:activity,status:status, id:(data.length+1)}])
   setListData([...listData, {activity:activity,status:status, id:(data.length+1)}]);
- 
   toast.success('Toast added successfully!');
-  //Reset existing state variables
   setActivity('');
   setStatus('Incomplete')
+  window.localStorage.setItem('data',JSON.stringify([...data,{activity:activity,status:status, id:(data.length+1)}]))
 }
 
 const deleteItem=(e)=>{
   const filterData= data.filter((data)=>data.id !== Number(e.target.id))
   setListData(filterData)
   setData(filterData)
+  window.localStorage.setItem('data',JSON.stringify(filterData))
 }
-
-
 
 const editItem=(e)=>{
  const item =  data.filter((d)=>d.id === Number(e.target.id))
@@ -58,19 +59,23 @@ const updateActivity = (id) =>{
       item.status = status;
     }
   })
+  window.localStorage.setItem('data',JSON.stringify(data))
 
   setData(data);
   setListData(data);
   toast('Toast Updated successfully!')
   setSelectedId(0);
-  
- 
   setActivity('');
   setStatus('Incomplete')
 }
 
+useEffect(() => {
+   const data =  JSON.parse(localStorage.getItem('data')) || [];
+   setListData(data);
+   setData(data);
+  }, []);
 
-  return (
+ return (
     <>
       <p className='HomeTitle'>{children}</p>
       <div className='Header'>
@@ -104,7 +109,6 @@ const updateActivity = (id) =>{
                      <i className="fas fa-edit" id={item.id} ></i>  
                     </button>
                    </div> 
-                
             </li>  
             ))}
               
@@ -112,9 +116,6 @@ const updateActivity = (id) =>{
       </div>
       <ToastContainer position='top-center' />
      
-
-
-
       <div className="modal" id="addTaskModal" tabIndex="-1" role="dialog">
         <div className="modal-dialog" role="document">
           <div className="modal-content">
